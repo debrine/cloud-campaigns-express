@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 
 const DEFAULT_PORT = 3002;
+
+dotenv.config();
 
 // Create a new express application instance
 const app: express.Application = express();

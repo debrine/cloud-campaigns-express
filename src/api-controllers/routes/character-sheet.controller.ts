@@ -9,6 +9,8 @@ CharacterSheetRouter.get('/', (req: Request, res: Response) => {
 
 CharacterSheetRouter.get('/:id', (req: Request, res: Response) => {
   console.log('Request', req);
+  const { id } = req.params;
+
   res.send('Hello world!');
 });
 
