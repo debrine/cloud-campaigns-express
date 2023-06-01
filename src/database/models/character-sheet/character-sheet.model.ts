@@ -6,13 +6,15 @@ import {
 } from './ability-scores.model';
 import { CharacterSummaryModel } from './character-summary.model';
 import { Ability } from './ability.model';
+
+import { BaseDbModel } from '../base.model';
 import {
   CharacterClass,
   CharacterRace,
-} from '../../../../../enums/character-sheet-enums';
+} from '../../../enums/character-sheet-enums';
 
 // ideally these are all in a common module
-export const CharacterSheet = z.object({
+export const CharacterSheet = BaseDbModel.extend({
   characterName: z.string(),
   playerName: z.string(),
   characterClass: z.nativeEnum(CharacterClass),
