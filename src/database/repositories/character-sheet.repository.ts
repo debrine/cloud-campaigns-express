@@ -1,14 +1,33 @@
+import { Container } from '@azure/cosmos';
+import { DatabaseClient } from '../database-client';
+
 export class CharacterSheetRepository {
-  // add in table prefixes and other things here
-  constructor() {}
+  private container: Container;
+  constructor() {
+    const dbClient = DatabaseClient.getInstance();
+    this.container = dbClient.getContainer('character-sheets');
+  }
 
-  async getCharacterSheetById(id: string) {}
+  // todo integrate factories
+  async getCharacterSheetById(id: string) {
+    const dbItem = this.container.item(id).read();
+  }
 
-  async getCharacterSheets() {}
+  async getAllCharacterSheets() {
+    const dbItems = this.container.items.readAll();
+  }
 
-  async createCharacterSheet(characterSheet: any) {}
+  async createCharacterSheet(characterSheet: any) {
+    const dbItem = this.container.items.create(characterSheet);
+  }
 
-  async updateCharacterSheet(characterSheet: any) {}
+  async updateCharacterSheet(characterSheet: any) {
+    const dbItem = this.container
+      .item(characterSheet.id)
+      .replace(characterSheet);
+  }
 
-  async deleteCharacterSheet(id: string) {}
+  async deleteCharacterSheet(id: string) {
+    const dbItem = this.container.item(id).delete();
+  }
 }

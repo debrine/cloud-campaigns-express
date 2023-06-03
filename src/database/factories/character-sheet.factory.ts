@@ -1,11 +1,9 @@
 import { CharacterSheet } from '../models/character-sheet/character-sheet.model';
-import { v4 as uuid } from 'uuid';
+import { createBaseFactory, updateBaseFactory } from './base.factory';
 
 export const createCharacterSheetFactory = (request: any) => {
   return CharacterSheet.parse({
-    id: uuid(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    ...createBaseFactory(),
     characterName: request.characterName,
     playerName: request.playerName,
     characterClass: request.characterClass,
@@ -33,9 +31,7 @@ export const updateCharacterSheetFactory = (
   characterSheet: CharacterSheet
 ) => {
   return CharacterSheet.parse({
-    id: characterSheet.id,
-    createdAt: characterSheet.createdAt,
-    updatedAt: new Date(),
+    ...updateBaseFactory(characterSheet),
     characterName: request.characterName,
     playerName: request.playerName,
     characterClass: request.characterClass,
