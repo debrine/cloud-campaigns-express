@@ -1,4 +1,7 @@
-import { UserAccount } from '../../database/models/user-account.model';
+import {
+  UserAccount,
+  UserAccountDbModel,
+} from '../../database/models/user-account.model';
 import { UserAccountRepository } from '../../database/repositories/user-account.repository';
 import { compare } from 'bcrypt';
 
@@ -31,6 +34,7 @@ export default class UserAccountService {
     const existingUserAccount =
       await this.userRepository.getUserAccountByUsername(userAccount.username);
     if (existingUserAccount) {
+      console.log('existing user account', existingUserAccount);
       throw new Error('Username already exists');
     }
     return await this.userRepository.createUserAccount(userAccount);
@@ -44,7 +48,7 @@ export default class UserAccountService {
     return await this.userRepository.getAllUserAccounts();
   }
 
-  async editUserAccount(userAccount: UserAccount): Promise<UserAccount> {
+  async editUserAccount(userAccount: UserAccountDbModel): Promise<UserAccount> {
     return await this.userRepository.updateUserAccount(userAccount);
   }
 }

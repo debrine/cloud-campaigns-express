@@ -1,6 +1,6 @@
 import { Container } from '@azure/cosmos';
 import { DatabaseClient } from '../database-client';
-import { UserAccount } from '../models/user-account.model';
+import { UserAccount, UserAccountDbModel } from '../models/user-account.model';
 import {
   createUserAccountFactory,
   updateUserAccountFactory,
@@ -13,9 +13,9 @@ export class UserAccountRepository {
     this.container = dbClient.getContainer('user-accounts');
   }
 
-  async getUserAccountById(id: string): Promise<UserAccount> {
+  async getUserAccountById(id: string): Promise<UserAccountDbModel> {
     const dbItem = await this.container.item(id).read();
-    return UserAccount.parse(dbItem);
+    return UserAccountDbModel.parse(dbItem);
   }
 
   async getAllUserAccounts(): Promise<UserAccount[]> {
@@ -24,13 +24,17 @@ export class UserAccountRepository {
   }
 
   async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
-    const dbItem = await this.container.items.create(
-      createUserAccountFactory(userAccount)
-    );
-    return UserAccount.parse(dbItem);
+    const itemToCreate = await createUserAccountFactory(userAccount);
+    console.log('creating user account', itemToCreate);
+    const dbItem = await this.container.items.create(itemToCreate);
+    console.log('dbItem', dbItem.resource);
+
+    return UserAccount.parse(dbItem.resource);
   }
 
-  async updateUserAccount(userAccount: UserAccount): Promise<UserAccount> {
+  async updateUserAccount(
+    userAccount: UserAccountDbModel
+  ): Promise<UserAccount> {
     const savedUserAccount = await this.getUserAccountById(userAccount.id);
 
     const dbItem = this.container

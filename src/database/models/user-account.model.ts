@@ -6,7 +6,7 @@ export enum Role {
   User = 'User',
 }
 
-export const UserAccount = BaseDbModel.extend({
+export const UserAccount = z.object({
   username: z.string(),
   password: z.string(),
   email: z.string().email(),
@@ -16,3 +16,7 @@ export const UserAccount = BaseDbModel.extend({
 });
 
 export type UserAccount = z.infer<typeof UserAccount>;
+
+export const UserAccountDbModel = UserAccount.merge(BaseDbModel);
+
+export type UserAccountDbModel = z.infer<typeof UserAccountDbModel>;

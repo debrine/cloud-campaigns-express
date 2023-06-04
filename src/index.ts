@@ -1,11 +1,12 @@
-import express, { Request, Response } from 'express';
-import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-
-const DEFAULT_PORT = 3002;
-
 dotenv.config();
 
+import express, { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+
+import { UserAccountRouter } from './api-controllers/routes/user-account.controller';
+
+const DEFAULT_PORT = 3002;
 // Create a new express application instance
 const app: express.Application = express();
 
@@ -18,10 +19,9 @@ const port: number = process.env.PORT
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// define a route handler for the default home page
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello world!');
-});
+console.log('will work?', process.env.DB_URI);
+
+app.use('/user-account', UserAccountRouter);
 
 // Serve the application at the given port
 app.listen(port, () => {

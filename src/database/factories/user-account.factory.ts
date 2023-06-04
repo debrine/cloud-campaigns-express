@@ -1,9 +1,10 @@
-import { UserAccount } from '../models/user-account.model';
+import { UserAccount, UserAccountDbModel } from '../models/user-account.model';
 import { createBaseFactory, updateBaseFactory } from './base.factory';
 import { hash } from 'bcrypt';
 
 export const createUserAccountFactory = async (request: any) => {
-  return UserAccount.parse({
+  console.log('creating user from request', request);
+  return UserAccountDbModel.parse({
     ...createBaseFactory(),
     username: request.username,
     password: await hash(request.password, 10),
@@ -16,9 +17,9 @@ export const createUserAccountFactory = async (request: any) => {
 
 export const updateUserAccountFactory = async (
   request: any,
-  userAccount: UserAccount
+  userAccount: UserAccountDbModel
 ) => {
-  return UserAccount.parse({
+  return UserAccountDbModel.parse({
     ...updateBaseFactory(userAccount),
     username: request.email,
     password: userAccount.password,
