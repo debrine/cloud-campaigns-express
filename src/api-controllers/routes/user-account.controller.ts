@@ -15,6 +15,7 @@ UserAccountRouter.get('/login', async (req: Request, res: Response) => {
     );
     res.send(userAccount);
   } catch (error) {
+    console.error(error);
     res.status(500).send(error);
   }
 });
@@ -27,6 +28,7 @@ UserAccountRouter.post('/register', async (req: Request, res: Response) => {
     const userAccount = await userAccountService.registerUser(
       userAccountToCreate
     );
+    console.log('user account to return', userAccount);
     res.send(userAccount);
   } catch (error) {
     res.status(500).send(error);

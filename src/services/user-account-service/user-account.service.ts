@@ -1,6 +1,7 @@
 import {
   UserAccount,
   UserAccountDbModel,
+  UserAccountDbModelNoPassword,
 } from '../../database/models/user-account.model';
 import { UserAccountRepository } from '../../database/repositories/user-account.repository';
 import { compare } from 'bcrypt';
@@ -14,7 +15,7 @@ export default class UserAccountService {
   async authenticateUser(
     username: string,
     password: string
-  ): Promise<UserAccount> {
+  ): Promise<UserAccountDbModelNoPassword> {
     const userAccount = await this.userRepository.getUserAccountByUsername(
       username
     );
@@ -27,17 +28,27 @@ export default class UserAccountService {
     if (!isPasswordValid) {
       throw new Error('Invalid password');
     }
-    return userAccount;
+    return UserAccountDbModelNoPassword.parse(userAccount);
   }
 
-  async registerUser(userAccount: UserAccount): Promise<UserAccount> {
+  async registerUser(
+    userAccount: UserAccount
+  ): Promise<UserAccountDbModelNoPassword> {
     const existingUserAccount =
       await this.userRepository.getUserAccountByUsername(userAccount.username);
     if (existingUserAccount) {
       console.log('existing user account', existingUserAccount);
       throw new Error('Username already exists');
     }
-    return await this.userRepository.createUserAccount(userAccount);
+
+    try {
+      const newUser = await this.userRepository.createUserAccount(userAccount);
+
+      return UserAccountDbModelNoPassword.parse(newUser);
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error creating user account');
+    }
   }
 
   async getUserAccountById(id: string): Promise<UserAccount> {

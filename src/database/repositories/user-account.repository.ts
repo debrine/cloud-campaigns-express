@@ -23,13 +23,15 @@ export class UserAccountRepository {
     return dbItems.resources.map((dbItem) => UserAccount.parse(dbItem));
   }
 
-  async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
+  async createUserAccount(
+    userAccount: UserAccount
+  ): Promise<UserAccountDbModel> {
     const itemToCreate = await createUserAccountFactory(userAccount);
     console.log('creating user account', itemToCreate);
     const dbItem = await this.container.items.create(itemToCreate);
     console.log('dbItem', dbItem.resource);
 
-    return UserAccount.parse(dbItem.resource);
+    return UserAccountDbModel.parse(dbItem.resource);
   }
 
   async updateUserAccount(
