@@ -41,6 +41,8 @@ CharacterSheetRouter.put('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   const characterSheet = req.body;
 
+  console.log('characterSheet', characterSheet);
+
   try {
     const updatedCharacterSheet =
       await characterSheetService.updateCharacterSheet(id, characterSheet);

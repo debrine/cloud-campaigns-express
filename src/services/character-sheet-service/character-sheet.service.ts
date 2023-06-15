@@ -24,7 +24,7 @@ export default class CharacterSheetService {
 
   public updateCharacterSheet = async (
     id: string,
-    characterSheet: CharacterSheetDbModel
+    characterSheet: CharacterSheet
   ): Promise<CharacterSheetDbModel> => {
     return await this.serviceRepository.updateCharacterSheet(
       id,

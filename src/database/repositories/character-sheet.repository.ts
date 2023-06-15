@@ -23,7 +23,8 @@ export class CharacterSheetRepository {
   // todo integrate factories
   async getCharacterSheetById(id: string): Promise<CharacterSheetDbModel> {
     const dbItem = await this.container.item(id).read();
-    return CharacterSheetDbModel.parse(dbItem);
+    console.log('dbItem', dbItem.resource);
+    return CharacterSheetDbModel.parse(dbItem.resource);
   }
 
   async getAllCharacterSheets(): Promise<CharacterSheetDbModel[]> {
@@ -55,6 +56,6 @@ export class CharacterSheetRepository {
       .replace(
         updateCharacterSheetFactory(characterSheet, savedCharacterSheet)
       );
-    return CharacterSheetDbModel.parse(dbItem);
+    return CharacterSheetDbModel.parse(dbItem.resource);
   }
 }
