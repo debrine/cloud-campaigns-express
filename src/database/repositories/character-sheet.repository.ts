@@ -8,7 +8,10 @@ import {
   createUserAccountFactory,
   updateUserAccountFactory,
 } from '../factories/user-account.factory';
-import { updateCharacterSheetFactory } from '../factories/character-sheet.factory';
+import {
+  createCharacterSheetFactory,
+  updateCharacterSheetFactory,
+} from '../factories/character-sheet.factory';
 
 export class CharacterSheetRepository {
   private container: Container;
@@ -33,9 +36,9 @@ export class CharacterSheetRepository {
   async createCharacterSheet(
     characterSheet: CharacterSheet
   ): Promise<CharacterSheetDbModel> {
-    const itemToCreate = await createUserAccountFactory(characterSheet);
+    const itemToCreate = await createCharacterSheetFactory(characterSheet);
     console.log('creating character sheet', itemToCreate);
-    const dbItem = await this.container.items.create(characterSheet);
+    const dbItem = await this.container.items.create(itemToCreate);
     console.log('dbItem', dbItem.resource);
 
     return CharacterSheetDbModel.parse(dbItem.resource);
@@ -47,7 +50,7 @@ export class CharacterSheetRepository {
   ): Promise<CharacterSheetDbModel> {
     const savedCharacterSheet = await this.getCharacterSheetById(id);
 
-    const dbItem = this.container
+    const dbItem = await this.container
       .item(id)
       .replace(
         updateCharacterSheetFactory(characterSheet, savedCharacterSheet)
