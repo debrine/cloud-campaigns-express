@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
   CharacterClass,
   CharacterRace,
-} from '../../enums/character-sheet-enums';
+} from '../../../enums/character-sheet-enums';
 
 export const CharacterSummaryModel = z.object({
   id: z.string(), // UUID Type?

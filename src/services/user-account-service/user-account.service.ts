@@ -5,6 +5,7 @@ import {
 } from '../../database/models/user-account.model';
 import { UserAccountRepository } from '../../database/repositories/user-account.repository';
 import { compare } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
 
 export default class UserAccountService {
   userRepository: UserAccountRepository;
@@ -15,7 +16,10 @@ export default class UserAccountService {
   async authenticateUser(
     username: string,
     password: string
-  ): Promise<UserAccountDbModelNoPassword> {
+  ): Promise<{
+    sessionUser: UserAccountDbModelNoPassword;
+    sessionToken: string;
+  }> {
     const userAccount = await this.userRepository.getUserAccountByUsername(
       username
     );
@@ -28,7 +32,14 @@ export default class UserAccountService {
     if (!isPasswordValid) {
       throw new Error('Invalid password');
     }
-    return UserAccountDbModelNoPassword.parse(userAccount);
+
+    const authenticatedUser = UserAccountDbModelNoPassword.parse(userAccount);
+    const token = this.generateToken(authenticatedUser);
+
+    return {
+      sessionUser: authenticatedUser,
+      sessionToken: token,
+    };
   }
 
   async registerUser(
@@ -61,5 +72,17 @@ export default class UserAccountService {
 
   async editUserAccount(userAccount: UserAccountDbModel): Promise<UserAccount> {
     return await this.userRepository.updateUserAccount(userAccount);
+  }
+
+  private generateToken(userAccount: { id: string; username: string }): string {
+    const accessSecret = process.env.ACCESS_TOKEN_SECRET ?? 'secret';
+
+    return sign(
+      {
+        id: userAccount.id,
+        username: userAccount.username,
+      },
+      accessSecret
+    );
   }
 }

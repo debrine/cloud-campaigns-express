@@ -1,8 +1,13 @@
-import { CharacterSheet } from '../models/character-sheet/character-sheet.model';
+import {
+  CharacterSheet,
+  CharacterSheetDbModel,
+} from '../models/character-sheet/character-sheet.model';
 import { createBaseFactory, updateBaseFactory } from './base.factory';
 
-export const createCharacterSheetFactory = (request: any) => {
-  return CharacterSheet.parse({
+export const createCharacterSheetFactory = (
+  request: any
+): CharacterSheetDbModel => {
+  return CharacterSheetDbModel.parse({
     ...createBaseFactory(),
     characterName: request.characterName,
     playerName: request.playerName,
@@ -28,9 +33,9 @@ export const createCharacterSheetFactory = (request: any) => {
 
 export const updateCharacterSheetFactory = (
   request: any,
-  characterSheet: CharacterSheet
-) => {
-  return CharacterSheet.parse({
+  characterSheet: CharacterSheetDbModel
+): CharacterSheetDbModel => {
+  return CharacterSheetDbModel.parse({
     ...updateBaseFactory(characterSheet),
     characterName: request.characterName,
     playerName: request.playerName,

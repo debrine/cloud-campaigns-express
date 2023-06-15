@@ -14,7 +14,7 @@ import {
 } from '../../../enums/character-sheet-enums';
 
 // ideally these are all in a common module
-export const CharacterSheet = BaseDbModel.extend({
+export const CharacterSheet = z.object({
   characterName: z.string(),
   playerName: z.string(),
   characterClass: z.nativeEnum(CharacterClass),
@@ -49,3 +49,7 @@ export const CharacterSheet = BaseDbModel.extend({
 });
 
 export type CharacterSheet = z.infer<typeof CharacterSheet>;
+
+export const CharacterSheetDbModel = CharacterSheet.merge(BaseDbModel);
+
+export type CharacterSheetDbModel = z.infer<typeof CharacterSheetDbModel>;

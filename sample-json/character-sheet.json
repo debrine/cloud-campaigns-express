@@ -1,0 +1,16 @@
+{
+  "characterName": "Character Name",
+  "playerName": "Player Name",
+  "characterClass": "Barbarian",
+  "characterLevel": 1,
+  "proficiencyBonus": 2,
+  "alignment": "Neutral",
+  "background": "Background",
+  "race": "Human",
+  "experiencePoints": 0,
+  "inspiration": false,
+  "armourClass": 12,
+  "initiative": 2,
+  "speed": 30,
+  "hitPoints": 10
+}

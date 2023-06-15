@@ -1,5 +1,14 @@
 import { Container } from '@azure/cosmos';
 import { DatabaseClient } from '../database-client';
+import {
+  CharacterSheet,
+  CharacterSheetDbModel,
+} from '../models/character-sheet/character-sheet.model';
+import {
+  createUserAccountFactory,
+  updateUserAccountFactory,
+} from '../factories/user-account.factory';
+import { updateCharacterSheetFactory } from '../factories/character-sheet.factory';
 
 export class CharacterSheetRepository {
   private container: Container;
@@ -9,25 +18,40 @@ export class CharacterSheetRepository {
   }
 
   // todo integrate factories
-  async getCharacterSheetById(id: string) {
-    const dbItem = this.container.item(id).read();
+  async getCharacterSheetById(id: string): Promise<CharacterSheetDbModel> {
+    const dbItem = await this.container.item(id).read();
+    return CharacterSheetDbModel.parse(dbItem);
   }
 
-  async getAllCharacterSheets() {
-    const dbItems = this.container.items.readAll();
+  async getAllCharacterSheets(): Promise<CharacterSheetDbModel[]> {
+    const dbItems = await this.container.items.readAll().fetchAll();
+    return dbItems.resources.map((dbItem) =>
+      CharacterSheetDbModel.parse(dbItem)
+    );
   }
 
-  async createCharacterSheet(characterSheet: any) {
-    const dbItem = this.container.items.create(characterSheet);
+  async createCharacterSheet(
+    characterSheet: CharacterSheet
+  ): Promise<CharacterSheetDbModel> {
+    const itemToCreate = await createUserAccountFactory(characterSheet);
+    console.log('creating character sheet', itemToCreate);
+    const dbItem = await this.container.items.create(characterSheet);
+    console.log('dbItem', dbItem.resource);
+
+    return CharacterSheetDbModel.parse(dbItem.resource);
   }
 
-  async updateCharacterSheet(characterSheet: any) {
+  async updateCharacterSheet(
+    id: string,
+    characterSheet: CharacterSheet
+  ): Promise<CharacterSheetDbModel> {
+    const savedCharacterSheet = await this.getCharacterSheetById(id);
+
     const dbItem = this.container
-      .item(characterSheet.id)
-      .replace(characterSheet);
-  }
-
-  async deleteCharacterSheet(id: string) {
-    const dbItem = this.container.item(id).delete();
+      .item(id)
+      .replace(
+        updateCharacterSheetFactory(characterSheet, savedCharacterSheet)
+      );
+    return CharacterSheetDbModel.parse(dbItem);
   }
 }

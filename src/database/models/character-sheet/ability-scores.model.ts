@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
   AbilityType,
   SkillProficiencyLevel,
-} from '../../enums/character-sheet-enums';
+} from '../../../enums/character-sheet-enums';
 
 export const AbilityScoreWithModifier = z.object({
   abilityName: z.string(),

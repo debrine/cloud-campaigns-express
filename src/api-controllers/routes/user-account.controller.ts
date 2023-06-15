@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import UserAccountService from '../../services/user-account-service/user-account.service';
 import { UserAccount } from '../../database/models/user-account.model';
+import { authenticateToken } from '../middleware/api-middleware';
 
 export const UserAccountRouter = express.Router();
 const userAccountService = new UserAccountService();

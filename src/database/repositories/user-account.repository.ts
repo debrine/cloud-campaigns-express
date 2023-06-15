@@ -18,9 +18,9 @@ export class UserAccountRepository {
     return UserAccountDbModel.parse(dbItem);
   }
 
-  async getAllUserAccounts(): Promise<UserAccount[]> {
+  async getAllUserAccounts(): Promise<UserAccountDbModel[]> {
     const dbItems = await this.container.items.readAll().fetchAll();
-    return dbItems.resources.map((dbItem) => UserAccount.parse(dbItem));
+    return dbItems.resources.map((dbItem) => UserAccountDbModel.parse(dbItem));
   }
 
   async createUserAccount(
@@ -36,16 +36,18 @@ export class UserAccountRepository {
 
   async updateUserAccount(
     userAccount: UserAccountDbModel
-  ): Promise<UserAccount> {
+  ): Promise<UserAccountDbModel> {
     const savedUserAccount = await this.getUserAccountById(userAccount.id);
 
     const dbItem = this.container
       .item(userAccount.id)
       .replace(updateUserAccountFactory(userAccount, savedUserAccount));
-    return UserAccount.parse(dbItem);
+    return UserAccountDbModel.parse(dbItem);
   }
 
-  async getUserAccountByUsername(username: string): Promise<UserAccount> {
+  async getUserAccountByUsername(
+    username: string
+  ): Promise<UserAccountDbModel> {
     const querySpec = {
       query: 'SELECT * FROM c WHERE c.username = @username',
       parameters: [
@@ -63,7 +65,7 @@ export class UserAccountRepository {
     return results[0];
   }
 
-  async getUserAccountByEmail(email: string) {
+  async getUserAccountByEmail(email: string): Promise<UserAccountDbModel> {
     const querySpec = {
       query: 'SELECT * FROM c WHERE c.email = @email',
       parameters: [
@@ -78,6 +80,6 @@ export class UserAccountRepository {
       .query(querySpec)
       .fetchAll();
 
-    return results;
+    return results[0];
   }
 }
